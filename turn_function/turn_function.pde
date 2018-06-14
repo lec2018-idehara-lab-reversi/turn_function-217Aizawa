@@ -65,7 +65,7 @@ void showBan(int[][] b)
           break;
       }
 
-      // おける場所には赤丸
+      // おける場所には赤丸。turnが0でないもの
       if( turn(ban, teban, x, y) != 0 )
       {
         fill(255,0,0);
@@ -92,24 +92,26 @@ void mouseClicked()
 
 // 盤面 b に、色 te の石を (x,y) に置こうとしたとき、(dx,dy) 方向に相手の石が何個ひっくり返せるか数えて答える関数
 // (dx,dy) は、(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1) で８方向
-int turnSub(int[][] b, int te, int x, int y, int dx, int dy)
+int turnSub(int[][] b, int te, int x, int y, int dx, int dy)//intの返り値
 {
   // 相手の石を数える変数
   int result = 0;
 
-  // まず、置こうとしている場所の隣に移動する
+  // まず、置こうとしている場所の隣に移動する。sotoを定義していることで逐一確認しなくてよい。
   x += dx;
   y += dy;
 
   // そこが「相手の石の色である」あいだ、その数を数えながらその先に移動していく。
-  while(  )
+  while(b[x][y] == -te)
   {
-
+    x += dx;
+    y += dy;
+    result++;
   }
 
   // 繰り返しを抜けるのは「相手の石でない」ものを発見したとき。このとき自分の石を見ていれば、ひっくり返せる。それまで
   // 自分の石でなければ、それまで何個数えていても、ひっくり返せるのは０個。
-  if( )
+  if(b[x][y] == te)
   {
     return result;
   }
@@ -126,7 +128,7 @@ int turn(int[][] b, int te, int x, int y)
   // 置こうとしてる場所が AKI でないなら、一個もひっくり返せない。
   if( b[x][y] != AKI )
   {
-    return 0;
+    return 0;//  returnがくると、ここで関数終了する
   }
 
   // 総数を数える準備。
@@ -135,6 +137,19 @@ int turn(int[][] b, int te, int x, int y)
   // (-1,-1) 方向の数を数える。
   result += turnSub(b, te, x, y, -1, -1);
   // あと７方向全部数えて足し合わせる。
-
+  result += turnSub(b, te, x, y, -1, 1);
+  
+  result += turnSub(b, te, x, y, -1, 0);
+  
+  result += turnSub(b, te, x, y, 0, -1);
+  
+  result += turnSub(b, te, x, y, 0, 1);
+  
+  result += turnSub(b, te, x, y, 1, -1);
+  
+  result += turnSub(b, te, x, y, 1, 1);
+  
+  result += turnSub(b, te, x, y, 1, 0);
+  
   return result;
 }
