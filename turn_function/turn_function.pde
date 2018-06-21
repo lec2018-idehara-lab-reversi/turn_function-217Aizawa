@@ -85,9 +85,13 @@ void mouseClicked()
   println("(" + mouseX + "," + mouseY + ")");
   int gx = mouseX / CELLSIZE + 1;
   int gy = mouseY / CELLSIZE + 1;
+  
+  if(turn(ban, teban, gx, gy) != 0){  //赤丸がある箇所にしか置けないようにする
 
   ban[gx][gy] = teban;
   teban = -teban;
+  
+  }
 }
 
 // 盤面 b に、色 te の石を (x,y) に置こうとしたとき、(dx,dy) 方向に相手の石が何個ひっくり返せるか数えて答える関数
@@ -152,4 +156,5 @@ int turn(int[][] b, int te, int x, int y)
   result += turnSub(b, te, x, y, 1, 0);
   
   return result;
+
 }
