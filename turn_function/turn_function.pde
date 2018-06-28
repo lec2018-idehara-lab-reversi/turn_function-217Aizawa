@@ -41,7 +41,7 @@ void showBan(int[][] b)
   background(0,96,0);
   for(int i=0; i<9; i++)
   {
-    line(0,i*CELLSIZE,BANSIZE,i*CELLSIZE);
+    line(0,i*CELLSIZE,BANSIZE,i*CELLSIZE); 
     line(i*CELLSIZE,0,i*CELLSIZE,BANSIZE);
   }
 
@@ -87,8 +87,8 @@ void mouseClicked()
   int gy = mouseY / CELLSIZE + 1;
   
   if(turn(ban, teban, gx, gy) != 0){  //赤丸がある箇所にしか置けないようにする
-
-  ban[gx][gy] = teban;
+    put(ban, teban, gx, gy);
+  
   teban = -teban;
   
   }
@@ -157,4 +157,55 @@ int turn(int[][] b, int te, int x, int y)
   
   return result;
 
+}
+
+int putSub(int[][] b, int te, int x, int y, int dx, int dy){//未完成
+  
+  int result = turnSub(b, te, x, y, dx, dy);//turnSubに何個ひっくり返せるか問い合わせる
+  
+  x += dx;//移動する
+  y += dy;
+  
+  // もしもその方向に石をひっくり返せないなら、何もせず０を返す。
+  if(result == 0){
+    
+    return 0;
+    
+  // そうでなければ、一歩動いてから
+
+  }// 相手の石が見える間、石をひっくり返していく
+  while(b[x][y] == -te){
+    b[x][y] = te;
+    
+    x += dx;
+    y += dy;
+    result++;
+  }
+  return 0;
+}
+
+int put(int[][] b, int te, int x, int y){
+  
+  int result = 0;
+  
+  b[x][y] = te;
+
+  // (-1,-1) 方向の数を数える。
+  result += putSub(b, te, x, y, -1, -1);
+  // あと７方向全部数えて足し合わせる。
+  result += putSub(b, te, x, y, -1, 1);
+  
+  result += putSub(b, te, x, y, -1, 0);
+  
+  result += putSub(b, te, x, y, 0, -1);
+  
+  result += putSub(b, te, x, y, 0, 1);
+  
+  result += putSub(b, te, x, y, 1, -1);
+  
+  result += putSub(b, te, x, y, 1, 1);
+  
+  result += putSub(b, te, x, y, 1, 0);
+  
+  return result;
 }
